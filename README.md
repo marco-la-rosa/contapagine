@@ -28,12 +28,14 @@ Inserisci i tuoi pdf e la data d'esame: lo script ti dirà esattamente quante pa
 ## 🔐 Configurazione
 
 1. **Copia le credenziali di Google Cloud**
+  
   - Crea un progetto su [Google Cloud Console](htpps://console.cloud.google.com)
   - Sulla pagina "Client" del progetto crea un client e scarica il file .json
   - Inserisci come URI di reindirezzamento autorizzati `http://localhost:38080/` e salva
   - Rinomina il file .json precedentemente scaricato in `credentials.json` e spostalo in una cartella .env 
   - Sulla pagina "Pubblico" del progetto inserisci la tua email su "Utenti di prova" e salva
 2. **Autorizza l'accesso a Google Calendar**
+  
   Al primo avvio, lo script aprirà una finestra di login per autorizzare l'uso del tuo calendario.
 
 ## 📂 Struttura delle cartelle 
