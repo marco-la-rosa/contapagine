@@ -1,59 +1,57 @@
+## About
+I created this script for personal use, just to keep track of how much did i need to study until the exam date. 
+It can also create **daily Google Calendar events** in order to track your progress. 
 
-# 📘 ContaPagine — Automazione studio per esami
-
-Questo script serve per **automatizzare la suddivisione delle pagine da studiare ogni giorno** per un esame universitario.
-
-Inserisci i tuoi pdf e la data d'esame: lo script ti dirà esattamente quante pagine studiare al giorno e, se lo vuoi, creerà automaticamente su **Google Calendar** degli eventi giornalieri con il progresso da seguire.
+Just input your pdfs and the exam date: the script will do everything.
 
 ---
 
-## 🧩 Installazione
-
-1. **Clona la repository**
+## Installing
+1. **Clone the repo**
 ```
    git clone https://github.com/marco-la-rosa/contapagine.git
    cd contapagine
 ```
-2. **Crea a attiva l'ambiente virtuale**
+2. **Create the virtual environment**
 ```
   python -m venv .venv
   source .venv/bin/activate        # Linux/macOS
   .venv\Scripts\activate           # Windows
 ```
-3. **Installa i pacchetti necessari**
+3. **Install the dependencies**
 ```
   pip install -r requirements.txt
 ```
 
-## 🔐 Configurazione
+---
 
-1. **Copia le credenziali di Google Cloud**
-  
-  - Crea un progetto su [Google Cloud Console](htpps://console.cloud.google.com)
-  - Sulla pagina "Client" del progetto crea un client e scarica il file .json
-  - Inserisci come URI di reindirezzamento autorizzati `http://localhost:38080/` e salva
-  - Rinomina il file .json precedentemente scaricato in `credentials.json` e spostalo in una cartella .env 
-  - Sulla pagina "Pubblico" del progetto inserisci la tua email su "Utenti di prova" e salva
-2. **Autorizza l'accesso a Google Calendar**
-  
-  Al primo avvio, lo script aprirà una finestra di login per autorizzare l'uso del tuo calendario.
+## Configuration
+  - Create a project in [Google Cloud Console](https://console.cloud.google.com)
+  - Download the .json file on the "Client" page of the project
+  - Write as an "Authorized redirect URIs" `http://localhost:38080/` and save
+  - Rename the .json file `credentials.json` and move it to a .env folder
+  - Write your email in "Test Users" on the "Public" page of the project and save
+  - Authorize the login on the first start
 
-## 📂 Struttura delle cartelle 
-All'interno della cartella principale, deve esserci una directory chiamata `Corsi` con questa struttura:
+
+## Folder structure 
+On the main folder there has to be a `Corsi` folder with this structure:
+
 ```
 Corsi/
-├── Tecnologia/
-│   └── Tecnologia.pdf
-├── Farmacologia/
-│   └── Farmacologia.pdf
-└── Chimica Farmaceutica II/
-    └── Chimica Farmaceutica II.pdf
+├── Exam Name 1/
+│   └── Exam Name 1.pdf
+├── Exam Name 2/
+│   └── Exam Name 2.pdf
+└── Exam Name .../
+    └── Exam Name ....pdf
 ```
-👉 Ogni sottocartella rappresenta un corso, e deve contenere un unico PDF chiamato esattamente come la cartella.
+Each subfolder has to contain exactly one pdf named as the subfolder but ending in .pdf.
 
-Se hai più PDF per uno stesso corso, puoi unirli in un unico file usando lo script unisci_pdf.py.
+I included a little script done by me called `unisci_pdf.py` to merge multiple pdfs into one if you need it.
 
-## ▶️ Esecuzione
-Per avviare il programma:
+## Execution
+To start the script simply type on the terminal:
 ```
 python contapagine.py
+```

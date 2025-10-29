@@ -21,7 +21,7 @@ def salva_corsi():
     return(corsi)
 
 def scelta_corso(corsi):
-    print("Ciao Marco! Benvenuto nel tuo software di preparazione allo studio. \nPuoi scegliere di studiare:")
+    print("Ciao! Benvenuto nel tuo software di preparazione allo studio. \nPuoi scegliere di studiare:")
     for numero, corso in corsi.items():
         print(f"{numero}. {corso}")
     
