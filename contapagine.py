@@ -95,13 +95,22 @@ def calendar(giorni_rimanenti, pagine_al_giorno, corso_scelto, num_pagine):
         start_page = i * pagine_al_giorno + 1
         end_page = min(num_pagine, start_page + pagine_al_giorno - 1)
 
-        data = (inizio + timedelta(days=i)).date().isoformat()
+        giorno_evento = inizio + timedelta(days=i)
+        start_time = giorno_evento.replace(hour=9, minute=0, second=0, microsecond=0)
+        end_time = start_time + timedelta(hours=4) # Evento di 4 ore
+
         titolo = f"Studia {corso_scelto} da pag. {start_page} a {end_page}"
 
         event = {
             'summary': titolo,
-            'start': {'date': data, 'timeZone': 'Europe/Rome'},
-            'end': {'date': data, 'timeZone': 'Europe/Rome'},
+            'start': {'dateTime': start_time.isoformat(), 'timeZone': 'Europe/Rome'},
+            'end': {'dateTime': end_time.isoformat(), 'timeZone': 'Europe/Rome'},
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                    {'method': 'popup', 'minutes': 0},
+                ],
+            },
         }
 
         service.events().insert(calendarId='primary', body=event).execute()
