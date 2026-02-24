@@ -25,7 +25,6 @@ def scelta_corso(corsi):
     for numero, corso in corsi.items():
         print(f"{numero}. {corso}")
     
-    # Controllo scelta
     while True:
         try:
             num_corso_scelto = int(input("\nInserisci il numero del corso da studiare: "))
@@ -75,48 +74,66 @@ def trova_data_esame():
 def calendar(giorni_rimanenti, pagine_al_giorno, corso_scelto, num_pagine):
     SCOPES = ['https://www.googleapis.com/auth/calendar']
     creds = None
+
     if os.path.exists('.env/token.pkl'):
         with open('.env/token.pkl', 'rb') as token:
             creds = pickle.load(token)
+
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file('.env/credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                '.env/credentials.json', SCOPES
+            )
             creds = flow.run_local_server(port=38080)
+
         with open('.env/token.pkl', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
 
+    oggi = datetime.today().date()
 
-    inizio = datetime.now()
+    descrizione = ""
     for i in range(giorni_rimanenti):
         start_page = i * pagine_al_giorno + 1
+        if start_page > num_pagine:
+            break
+
         end_page = min(num_pagine, start_page + pagine_al_giorno - 1)
+        giorno = oggi + timedelta(days=i)
 
-        giorno_evento = inizio + timedelta(days=i)
-        start_time = giorno_evento.replace(hour=9, minute=0, second=0, microsecond=0)
-        end_time = start_time + timedelta(hours=4) # Evento di 4 ore
+        descrizione += f"{giorno.strftime('%d %b %Y')} → pag {start_page}-{end_page}\n"
 
-        titolo = f"Studia {corso_scelto} da pag. {start_page} a {end_page}"
+    start_datetime = datetime.combine(oggi, datetime.min.time()).replace(hour=9)
+    end_datetime = start_datetime + timedelta(hours=4)
 
-        event = {
-            'summary': titolo,
-            'start': {'dateTime': start_time.isoformat(), 'timeZone': 'Europe/Rome'},
-            'end': {'dateTime': end_time.isoformat(), 'timeZone': 'Europe/Rome'},
-            'reminders': {
-                'useDefault': False,
-                'overrides': [
-                    {'method': 'popup', 'minutes': 0},
-                ],
-            },
-        }
+    event = {
+        'summary': f"Studia {corso_scelto}",
+        'description': descrizione,
+        'start': {
+            'dateTime': start_datetime.isoformat(),
+            'timeZone': 'Europe/Rome',
+        },
+        'end': {
+            'dateTime': end_datetime.isoformat(),
+            'timeZone': 'Europe/Rome',
+        },
+        'recurrence': [
+            f'RRULE:FREQ=DAILY;COUNT={giorni_rimanenti}'
+        ],
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+                {'method': 'popup', 'minutes': 0},
+            ],
+        },
+    }
 
-        service.events().insert(calendarId='primary', body=event).execute()
-        print(f"Aggiunto evento: {titolo}")
+    service.events().insert(calendarId='primary', body=event).execute()
+    print("Evento ricorrente creato con successo ✅")
 
- 
 def main():
     corsi = salva_corsi()
     corso_scelto = scelta_corso(corsi) 
